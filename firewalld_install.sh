@@ -1,8 +1,8 @@
 #!/bin/bash
 systemctl disable iptables
 systemctl stop iptables
-yum remove iptables -y
+chkconfig iptables off
 yum install -y firewalld
-systemctl start firewalld
 systemctl enable firewalld
+systemctl start firewalld
 systemctl status firewalld

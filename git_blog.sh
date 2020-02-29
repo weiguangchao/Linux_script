@@ -16,6 +16,8 @@ echo -e "#!/bin/sh\nWWW=${www_blog_location}\nGIT_REPO=${git_blog_location}\ngit
 chmod +x ${git_blog_location}/hooks/post-receive
 
 echo "3. 开放端口"
+sudo systemctl start firewalld
+sudo systemctl status firewalld
 sudo firewall-cmd --add-port=80/tcp --permanent
 sudo firewall-cmd --add-port=443/tcp --permanent
 sudo firewall-cmd --reload

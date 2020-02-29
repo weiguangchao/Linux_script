@@ -14,3 +14,8 @@ cd ${git_blog_location}
 git init --bare
 echo -e "#!/bin/sh\nWWW=${www_blog_location}\nGIT_REPO=${git_blog_location}\ngit --work-tree=\${WWW} --git-dir=\${GIT_REPO} checkout -f" > ${git_blog_location}/hooks/post-receive
 chmod +x ${git_blog_location}/hooks/post-receive
+
+echo "3. 开放端口"
+firewall-cmd --add-port=80/tcp --permanent
+firewall-cmd --add-port=443/tcp --permanent
+firewall-cmd --reload

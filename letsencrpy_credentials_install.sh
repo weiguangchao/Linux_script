@@ -29,12 +29,12 @@ read -p "请输入 dns_cloudflare_email: " dns_cloudflare_email
 read -p "请输入 dns_cloudflare_api_key: " dns_cloudflare_api_key
 credentials_content="dns_cloudflare_email = ${dns_cloudflare_email}\ndns_cloudflare_api_key = ${dns_cloudflare_api_key}"
 mkdir -p $credentials_path
-echo -e $credentials_content > $credentials_location
+echo -e $credentials_content >$credentials_location
 sudo certbot certonly \
-  --dns-cloudflare \
-  --dns-cloudflare-credentials ${credentials_location} \
-  -d ${domain} \
-  -d "www.${domain}" \
-  -i nginx
+--dns-cloudflare \
+--dns-cloudflare-credentials ${credentials_location} \
+-d ${domain} \
+-d "www.${domain}" \
+-i nginx
 echo "6. 设置自动续期"
-echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew" | sudo tee -a /etc/crontab > /dev/null
+echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew" | sudo tee -a /etc/crontab >/dev/null

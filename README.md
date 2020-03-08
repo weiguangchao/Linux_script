@@ -31,3 +31,14 @@ curl -k -o hexo_blog_git.sh "https://raw.githubusercontent.com/weiguangchao/Linu
 ~~~
 
 博客Git仓库位于`~/blog.git`，html代码位于`~/data/www`，同时会开启`80`和`443`端口
+
+# 网络优化
+
+来自[千影](https://github.com/chiakge/Linux-NetSpeed)的优化脚本
+
+~~~bash
+wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" &&
+chmod +x tcp.sh &&
+./tcp.sh
+~~~
+

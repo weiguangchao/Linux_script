@@ -9,9 +9,6 @@ dns_cloudflare_api_key=$api_key
 credentials_dir="${user_home}/.secrets/certbot"
 credentials_file="${credentials_dir}/cloudflare.ini"
 
-_certbot="certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini"
-_certbot_renew="echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q" | sudo tee -a /etc/crontab > /dev/null"
-
 # 安装依赖
 installDependencies() {
 	sudo yum install epel-release -y
@@ -20,6 +17,9 @@ installDependencies() {
 	sudo yum install certbot -y
 	sudo yum install python2-certbot-dns-cloudflare -y
 }
+
+_certbot="certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini"
+_certbot_renew="echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q" | sudo tee -a /etc/crontab > /dev/null"
 
 # 输出cf配置到文件
 outPutToCredentialsFile() {

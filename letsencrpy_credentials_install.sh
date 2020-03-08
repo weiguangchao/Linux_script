@@ -18,7 +18,7 @@ installDependencies() {
 	sudo yum install python2-certbot-dns-cloudflare -y
 }
 
-_certbot="certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini"
+_certbot="certbot certonly --dns-cloudflare --dns-cloudflare-credentials ${credentials_file}"
 _certbot_renew="echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q" | sudo tee -a /etc/crontab > /dev/null"
 
 # 输出cf配置到文件

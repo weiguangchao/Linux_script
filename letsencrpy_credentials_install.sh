@@ -1,40 +1,60 @@
 #!/bin/bash
-user_hoem=~
+user_home=~
 
-dns_cloudflare_email=""
-dns_cloudflare_api_key=""
+# cf配置信息
+dns_cloudflare_email=$email
+dns_cloudflare_api_key=$api_key
 
-credentials_location="${user_hoem}/.secrets/certbot/cloudflare.ini"
-credentials_path=${credentials_location%/*}
-credentials_content=""
+# 证书配置信息
+credentials_dir="${user_home}/.secrets/certbot"
+credentials_file="${credentials_dir}/cloudflare.ini"
 
-domain=""
+_certbot="certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini"
+_certbot_renew="echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q" | sudo tee -a /etc/crontab > /dev/null"
 
-echo "1. 开启EPEL repo"
-sudo yum install epel-release -y
+# 安装依赖
+installDependencies() {
+	sudo yum install epel-release -y
+	sudo yum -y install yum-utils
+	sudo yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
+	sudo yum install certbot -y
+	sudo yum install python2-certbot-dns-cloudflare -y
+}
 
-echo "2. 开启optional channel"
-sudo yum -y install yum-utils
-sudo yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
+# 输出cf配置到文件
+outPutToCredentialsFile() {
+	mkdir -p $credentials_dir
+	touch $credentials_file
+	cat >$credentials_file <<EOF
+dns_cloudflare_email=${dns_cloudflare_email}
+dns_cloudflare_api_key=${dns_cloudflare_api_key}
+EOF
+}
 
-echo "3. 安装Certbot"
-sudo yum install certbot python2-certbot-nginx -y
+# 生成证书，并自动续期
+gernerateCredentials() {
+	for i in $@; do
+		_certbot="${_certbot} -d $i"
+	done
+	$_certbot
+	$_certbot_renew
+}
 
-echo "4. 安装DNS plugin"
-sudo yum install python2-certbot-dns-cloudflare -y
+# 判断域名是否存在
+if [ $# == 0 ]; then
+	echo "please input your domain"
+	exit 1
+fi
 
-echo "5. 设置credentials"
-read -p "请输入 domain: " domain
-read -p "请输入 dns_cloudflare_email: " dns_cloudflare_email
-read -p "请输入 dns_cloudflare_api_key: " dns_cloudflare_api_key
-credentials_content="dns_cloudflare_email = ${dns_cloudflare_email}\ndns_cloudflare_api_key = ${dns_cloudflare_api_key}"
-mkdir -p $credentials_path
-echo -e $credentials_content >$credentials_location
-sudo certbot certonly \
---dns-cloudflare \
---dns-cloudflare-credentials ${credentials_location} \
--d ${domain} \
--d "www.${domain}" \
--i nginx
-echo "6. 设置自动续期"
-echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew" | sudo tee -a /etc/crontab >/dev/null
+if [ -f "$credentials_file" ]; then
+	gernerateCredentials
+else
+	# 检查email, api_key
+	if [ -z "$dns_cloudflare_email" ] || [ -z "${dns_cloudflare_api_key}" ]; then
+		echo "please export email or api_key"
+		exit 1
+	fi
+	installDependencies
+	outPutToCredentialsFile
+	gernerateCredentials
+fi

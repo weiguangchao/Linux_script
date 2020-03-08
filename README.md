@@ -24,12 +24,6 @@ curl -k -o docker_install.sh "https://raw.githubusercontent.com/weiguangchao/Lin
 
 若使用非root用户，为了不影响docker的使用，请将当前用户添加到docker用户组里
 
-# 设置Firewalld
-
-~~~bash
-curl -k -o firewalld_install.sh "https://raw.githubusercontent.com/weiguangchao/Linux_script/master/firewalld_install.sh" && chmod +x firewalld_install.sh && ./firewalld_install.sh
-~~~
-
 # 初始化Hexo博客的Git仓库
 
 ~~~bash

@@ -1,5 +1,13 @@
 # 申请let's encrpy credentials
 
+前提：
+
+需要将cf的api_key，email提前export到环境中
+
+`api_key`：cf的Global API Key
+
+`email`：cf的email
+
 ~~~bash
 curl -k -o letsencrpy_credentials_install.sh "https://raw.githubusercontent.com/weiguangchao/Linux_script/master/letsencrpy_credentials_install.sh" && chmod +x letsencrpy_credentials_install.sh && ./letsencrpy_credentials_install.sh your domain
 ~~~

@@ -15,7 +15,7 @@ cat >${git_blog_location}/hooks/post-receive <<EOF
 #!/bin/bash
 WWW=${www_blog_location}
 GIT_REPO=${git_blog_location}
-git --work-tree=${WWW} --git-dir=${GIT_REPO} checkout -f
+git --work-tree=WWW --git-dir=GIT_REPO checkout -f
 EOF
 
 chmod +x ${git_blog_location}/hooks/post-receive

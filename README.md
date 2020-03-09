@@ -14,7 +14,7 @@ curl -k -o letsencrpy_credentials_install.sh "https://raw.githubusercontent.com/
 
 your domain：多个域名使用空格进行分割
 
-在脚本执行过程中会再次输入域名进行确认，多个域名可以使用逗号或空格进行分割
+在脚本执行过程中会再次确认域名和邮箱，相关提示信息按照默认的即可
 
 # 安装docker 及 docker-compose
 
